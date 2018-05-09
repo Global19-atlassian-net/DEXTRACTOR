@@ -3,3 +3,7 @@
 /dextract
 /undexqv
 /undexta
+
+# meson
+subprojects/dazz_db
+/build*
