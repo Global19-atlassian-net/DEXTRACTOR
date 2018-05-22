@@ -19,6 +19,11 @@ static char *Usage = "[-vkU] [-w<int(80)>] ( -i | <path:dexta> ... )";
 
 #define MAX_BUFFER 100000
 
+#define SYSTEM_ERROR                                                   \
+  { EPRINTF(EPLACE,"%s: System error, read failed!\n",Prog_Name);      \
+    exit (2);                                                          \
+  }
+
 //  Uncompress read from 2-bits per base into [0-3] per byte representation
 
 static void flip_long(void *w)
@@ -131,7 +136,7 @@ int main(int argc, char *argv[])
           { uint16 half;
 
             if (fread(&half,sizeof(uint16),1,input) != 1)
-              SYSTEM_ERROR
+              SYSTEM_READ_ERROR
             if (half == 0x33cc)
               { flip = 0;
                 newv = 0;
@@ -154,12 +159,12 @@ int main(int argc, char *argv[])
               }
 
             if (fread(&well,sizeof(int),1,input) != 1)
-              SYSTEM_ERROR
+              SYSTEM_READ_ERROR
             if (flip) flip_long(&well);
             name = (char *) Malloc(well+1,"Allocating header prefix");
             if (well > 0)
               { if (fread(name,well,1,input) != 1)
-                  SYSTEM_ERROR
+                  SYSTEM_READ_ERROR
               }
             name[well] = '\0';
           }
@@ -179,44 +184,44 @@ int main(int argc, char *argv[])
               while (byte == 255)
                 { well += 255;
                   if (fread(&byte,1,1,input) != 1)
-                    SYSTEM_ERROR
+                    SYSTEM_READ_ERROR
                 }
               well += byte;
 
               if (newv)
                 if (flip)
                   { if (fread(&beg,sizeof(int),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     flip_long(&beg);
                     if (fread(&end,sizeof(int),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     flip_long(&end);
                     if (fread(&qv,sizeof(int),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     flip_long(&qv);
                   }
                 else
                   { if (fread(&beg,sizeof(int),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     if (fread(&end,sizeof(int),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     if (fread(&qv,sizeof(int),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                   }
               else
                 if (flip)
                   { uint16 half;
 
                     if (fread(&half,sizeof(uint16),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     flip_short(&half);
                     beg = half;
                     if (fread(&half,sizeof(uint16),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     flip_short(&half);
                     end = half;
                     if (fread(&half,sizeof(uint16),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     flip_short(&half);
                     qv = half;
                   }
@@ -224,13 +229,13 @@ int main(int argc, char *argv[])
                   { uint16 half;
 
                     if (fread(&half,sizeof(uint16),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     beg = half;
                     if (fread(&half,sizeof(uint16),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     end = half;
                     if (fread(&half,sizeof(uint16),1,input) != 1)
-                      SYSTEM_ERROR
+                      SYSTEM_READ_ERROR
                     qv = half;
                   }
 
@@ -247,7 +252,7 @@ int main(int argc, char *argv[])
               clen = COMPRESSED_LEN(rlen);
               if (clen > 0)
                 { if (fread(read,clen,1,input) != 1)
-                    SYSTEM_ERROR
+                    SYSTEM_READ_ERROR
                 }
               Uncompress_Read(rlen,read);
               if (UPPER)
