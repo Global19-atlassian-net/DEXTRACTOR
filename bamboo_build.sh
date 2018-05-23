@@ -41,6 +41,6 @@ case "${bamboo_planRepository_branchName}" in
     TERM='dumb' DESTDIR="${DESTDIR}" ninja -C ./build -v install
     chmod -R a+rwx "${DESTDIR}${PREFIX_ARG}"/*
     module load dextractor/${bamboo_planRepository_branchName}
-    ldd -r $(which TANmask)
+    ldd -r $(which undexta)
     ;;
 esac
