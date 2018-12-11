@@ -24,8 +24,14 @@ case "${bamboo_planRepository_branchName}" in
     ;;
 esac
 
-# rm -rf ./build
-meson --buildtype=release --strip --libdir=lib --prefix="${PREFIX_ARG}" -Dtests=false --wrap-mode nofallback ./build .
+#rm -rf ./build
+
+if [[ -d "./build" ]]; then
+  # build dir already exists, just refresh Meson cache
+  RECONFIGURE="--reconfigure"
+fi
+
+meson ${RECONFIGURE} --buildtype=release --strip --libdir=lib --prefix="${PREFIX_ARG}" -Dtests=false --wrap-mode nofallback ./build .
 
 TERM='dumb' ninja -C ./build -v
 
