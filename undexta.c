@@ -17,7 +17,7 @@
 
 static char *Usage = "[-vkU] [-w<int(80)>] ( -i | <path:dexta> ... )";
 
-#define MAX_BUFFER 1000000
+#define MAX_BUFFER 100000
 
 #define SYSTEM_ERROR                                                   \
   { EPRINTF(EPLACE,"%s: System error, read failed!\n",Prog_Name);      \
