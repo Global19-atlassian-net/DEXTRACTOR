@@ -19,11 +19,6 @@ static char *Usage = "[-vkU] [-w<int(80)>] ( -i | <path:dexta> ... )";
 
 #define MAX_BUFFER 100000
 
-#define SYSTEM_ERROR                                                   \
-  { EPRINTF(EPLACE,"%s: System error, read failed!\n",Prog_Name);      \
-    exit (2);                                                          \
-  }
-
 //  Uncompress read from 2-bits per base into [0-3] per byte representation
 
 static void flip_long(void *w)
