@@ -5,6 +5,7 @@ LDLIBS+= -lm -lpthread
 #LDFLAGS+= $(patsubst %,-L%,${LIBDIRS})
 #ALL = dextract dexta undexta dexqv undexqv
 ALL = dexta undexta
+# ALL = dextract dexta undexta dexar undexar dexqv undexqv dex2DB
 vpath %.c ${THISDIR}
 
 #%: %.c
